@@ -3,4 +3,4 @@ project(Calculator C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Calculator src/main.c)
+add_executable(Calculator src/main.c src/parser.c src/parser.h src/structsAndEnums.h)
