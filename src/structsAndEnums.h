@@ -15,4 +15,9 @@ typedef struct {
     Operation *opv;
 } ParsedExpression;
 
+typedef struct {
+    char *key;
+    ParsedExpression value;
+} DictEntire;
+
 #endif//STRUCTS_H

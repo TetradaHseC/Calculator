@@ -33,6 +33,23 @@ Operation GetOperation(char **startStr);
 
 Operation GetSymbolOperation(char chr);
 
+DictEntire ParseDefinition(char *line) {
+    DictEntire result;
+
+    char *p = line;
+    while (*++p != '=' && *p != ' ');
+
+    result.key = calloc(p - line + 1, sizeof(char));
+    strncpy(result.key, line, p - line);
+    result.key[p - line] = '\0';
+
+    while (*++p == '=' || *p == ' ');
+
+    ParseExpression(p, &result.value.numc, &result.value.numv, &result.value.opc, &result.value.opv);
+
+    return result;
+}
+
 void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Operation **opv) {
 #define NComplexNumberContext(block) { ComplexNumber cn = { 0.0, 0.0 }; block; }
     ComplexNumbersDArray dNArray = { NULL, 0, 0 };
@@ -41,15 +58,15 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
     for (char *pc = line; *pc != '\0'; ++pc) {
         if (IsDigit(*pc)) {
             NComplexNumberContext({
-                AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
-            })
+                                      AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
+                                  })
         } elif (IsAlpha(*pc)) {
             if (IsFunction(pc)) {
                 AddToOperationsDArray(&dOArray, GetOperation(&pc));
             } else {
                 NComplexNumberContext({
-                    AddToComplexNumbersDArray(&dNArray, GetDefined(&pc));
-                })
+                                          AddToComplexNumbersDArray(&dNArray, GetDefined(&pc));
+                                      })
             }
         } elif (IsSymbol(*pc)) {
             AddToOperationsDArray(&dOArray, GetSymbolOperation(*pc));
