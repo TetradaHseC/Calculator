@@ -51,25 +51,34 @@ DictEntire ParseDefinition(char *line) {
 }
 
 void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Operation **opv) {
-#define NComplexNumberContext(block) { ComplexNumber cn = { 0.0, 0.0 }; block; }
     ComplexNumbersDArray dNArray = { NULL, 0, 0 };
     OperationsDArray dOArray = { NULL, 0, 0 };
 
     for (char *pc = line; *pc != '\0'; ++pc) {
         if (IsDigit(*pc)) {
-            NComplexNumberContext({
-                                      AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
-                                  })
+            AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
         } elif (IsAlpha(*pc)) {
             if (IsFunction(pc)) {
                 AddToOperationsDArray(&dOArray, GetOperation(&pc));
             } else {
-                NComplexNumberContext({
-                                          AddToComplexNumbersDArray(&dNArray, GetDefined(&pc));
-                                      })
+                AddToComplexNumbersDArray(&dNArray, GetDefined(&pc));
             }
         } elif (IsSymbol(*pc)) {
-            AddToOperationsDArray(&dOArray, GetSymbolOperation(*pc));
+            Operation operation = GetSymbolOperation(*pc);
+
+            if (operation == EMinus &&
+                    (dOArray.count == 0 ||
+                    dOArray.array[dOArray.count - 1] == EOpenParenthesis ||
+                    dOArray.array[dOArray.count - 1] == EPlus ||
+                    dOArray.array[dOArray.count - 1] == EMinus ||
+                    dOArray.array[dOArray.count - 1] == EMultiply ||
+                    dOArray.array[dOArray.count - 1] == EDivide
+                    )
+            ) {
+                AddToOperationsDArray(&dOArray, EUnaryMinus);
+            } else {
+                AddToOperationsDArray(&dOArray, operation);
+            }
         }
     }
 
@@ -172,7 +181,7 @@ ComplexNumber GetNumber(char **startStr) {
         result.fake = number;
     }
 
-    *startStr += afterDotCount + 1 + (int)log10(number) - 1;
+    *startStr += afterDotCount + 1 + (int)log10(number) - 1 + (isFake ? 1 : 0);
 
     return result;
 }
