@@ -9,6 +9,7 @@
 #define scase(var) if (strlen(#var) == i && strncmp(scaseval, #var, i) == 0)
 #define elif else if
 #define throw_error(message) fprintf(stderr, "Error: "#message); exit(-1)
+#define string_pforeach(chrName, string) for (char *(chrName) = string; *(chrName) != '\0'; ++(chrName))
 
 DArray(ComplexNumber, ComplexNumbersDArray)
 DArray(Operation, OperationsDArray)
@@ -16,6 +17,10 @@ DArray(Operation, OperationsDArray)
 void AddToComplexNumbersDArray(ComplexNumbersDArray *dArray, ComplexNumber element);
 
 void AddToOperationsDArray(OperationsDArray *dArray, Operation element);
+
+void UnfoldComplexNumbersDArray(int *valc, ComplexNumber **valv, ComplexNumbersDArray *dArray);
+
+void UnfoldOperationsDArray(int *valc, Operation **valv, OperationsDArray *dArray);
 
 int IsComma(char chr);
 
@@ -34,6 +39,18 @@ ComplexNumber GetDefined(char **startStr);
 Operation GetOperation(char **startStr);
 
 Operation GetSymbolOperation(char chr);
+
+void OnSymbol(OperationsDArray *pDOArray, const char *pc);
+
+Operation GetLast(const OperationsDArray *dOArray);
+
+bool IsESymbol(Operation operation);
+
+void OnAlpha(ComplexNumbersDArray *dNArray, OperationsDArray *dOArray, char **pc);
+
+void OnDigit(ComplexNumbersDArray *dNArray, char **pc);
+
+void OnComma(OperationsDArray *dOArray);
 
 DictEntire ParseDefinition(char *line) {
     DictEntire result;
@@ -56,45 +73,57 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
     ComplexNumbersDArray dNArray = { NULL, 0, 0 };
     OperationsDArray dOArray = { NULL, 0, 0 };
 
-    for (char *pc = line; *pc != '\0'; ++pc) {
+    string_pforeach(pc, line) {
         if (IsComma(*pc)) {
-            AddToOperationsDArray(&dOArray, EComma);
+            OnComma(&dOArray);
         } elif (IsDigit(*pc)) {
-            AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
+            OnDigit(&dNArray, &pc);
         } elif (IsAlpha(*pc)) {
-            if (IsFunction(pc)) {
-                AddToOperationsDArray(&dOArray, GetOperation(&pc));
-            } else {
-                AddToComplexNumbersDArray(&dNArray, GetDefined(&pc));
-            }
+            OnAlpha(&dNArray, &dOArray, &pc);
         } elif (IsSymbol(*pc)) {
-            Operation operation = GetSymbolOperation(*pc);
-
-            if (operation == EMinus &&
-                    (dOArray.count == 0 ||
-                    dOArray.array[dOArray.count - 1] == EOpenParenthesis ||
-                    dOArray.array[dOArray.count - 1] == EPlus ||
-                    dOArray.array[dOArray.count - 1] == EMinus ||
-                    dOArray.array[dOArray.count - 1] == EMultiply ||
-                    dOArray.array[dOArray.count - 1] == EDivide)
-            ) {
-                AddToOperationsDArray(&dOArray, EUnaryMinus);
-            } else {
-                AddToOperationsDArray(&dOArray, operation);
-            }
+            OnSymbol(&dOArray, pc);
         }
     }
 
-    *numc = dNArray.count;
-    *numv = calloc(sizeof(ComplexNumber), *numc);
-    memcpy(*numv, dNArray.array, sizeof(ComplexNumber) * *numc);
-    free(dNArray.array);
-
-    *opc = dOArray.count;
-    *opv = calloc(sizeof(Operation), *opc);
-    memcpy(*opv, dOArray.array, sizeof(Operation) * *opc);
-    free(dOArray.array);
+    UnfoldComplexNumbersDArray(numc, numv, &dNArray);
+    UnfoldOperationsDArray(opc, opv, &dOArray);
 }
+
+void OnComma(OperationsDArray *dOArray) {
+    AddToOperationsDArray(dOArray, EComma);
+}
+
+void OnDigit(ComplexNumbersDArray *dNArray, char **pc) {
+    AddToComplexNumbersDArray(dNArray, GetNumber(pc));
+}
+
+void OnAlpha(ComplexNumbersDArray *dNArray, OperationsDArray *dOArray, char **pc) {
+    if (IsFunction(*pc)) {
+        AddToOperationsDArray(dOArray, GetOperation(pc));
+    } else {
+        AddToComplexNumbersDArray(dNArray, GetDefined(pc));
+    }
+}
+
+void OnSymbol(OperationsDArray *pDOArray, const char *pc) {
+    Operation operation = GetSymbolOperation(*pc);
+
+    AddToOperationsDArray(
+            pDOArray,
+            operation == EMinus &&
+            (pDOArray->count == 0 || IsESymbol(GetLast(pDOArray))) ? EUnaryMinus : operation);
+}
+
+bool IsESymbol(Operation operation) {
+    bool something = operation == EOpenParenthesis ||
+                     operation == EPlus ||
+                     operation == EMinus ||
+                     operation == EMultiply ||
+                     operation == EDivide;
+    return something;
+}
+
+Operation GetLast(const OperationsDArray *dOArray) { return dOArray->array[dOArray->count - 1]; }
 
 int IsDigit(char chr) {
     return ((chr >= '0')&&(chr <= '9'));
@@ -268,6 +297,17 @@ void AddTo##name(name *dArray, type element) { \
 
 AddToDArray(ComplexNumber, ComplexNumbersDArray)
 AddToDArray(Operation, OperationsDArray)
+
+#define UnfoldDArray(type, name) \
+void Unfold##name(int *valc, type **valv, name *dArray) { \
+    *valc = (*dArray).count; \
+    *valv = calloc(sizeof(type), *valc); \
+    memcpy(*valv, (*dArray).array, sizeof(type) * *valc); \
+    free((*dArray).array); \
+}
+
+UnfoldDArray(ComplexNumber, ComplexNumbersDArray)
+UnfoldDArray(Operation, OperationsDArray)
 
 int IsComma(char chr) {
     return chr == ',';
