@@ -8,7 +8,7 @@
 #define DArray(type, name) typedef struct { type *array; int size, count;} name;
 #define scase(var) if (strlen(#var) == i && strncmp(scaseval, #var, i) == 0)
 #define elif else if
-#define throw_error(message) fprintf(stderr, "Error: "#message); 0 / 0;
+#define throw_error(message) fprintf(stderr, "Error: "#message); exit(-1)
 
 DArray(ComplexNumber, ComplexNumbersDArray)
 DArray(Operation, OperationsDArray)
@@ -76,8 +76,7 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
                     dOArray.array[dOArray.count - 1] == EPlus ||
                     dOArray.array[dOArray.count - 1] == EMinus ||
                     dOArray.array[dOArray.count - 1] == EMultiply ||
-                    dOArray.array[dOArray.count - 1] == EDivide
-                    )
+                    dOArray.array[dOArray.count - 1] == EDivide)
             ) {
                 AddToOperationsDArray(&dOArray, EUnaryMinus);
             } else {
