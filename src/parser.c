@@ -17,6 +17,8 @@ void AddToComplexNumbersDArray(ComplexNumbersDArray *dArray, ComplexNumber eleme
 
 void AddToOperationsDArray(OperationsDArray *dArray, Operation element);
 
+int IsComma(char chr);
+
 int IsDigit(char chr);
 
 int IsSymbol(char chr);
@@ -55,7 +57,9 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
     OperationsDArray dOArray = { NULL, 0, 0 };
 
     for (char *pc = line; *pc != '\0'; ++pc) {
-        if (IsDigit(*pc)) {
+        if (IsComma(*pc)) {
+            continue;
+        } elif (IsDigit(*pc)) {
             AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
         } elif (IsAlpha(*pc)) {
             if (IsFunction(pc)) {
@@ -265,3 +269,7 @@ void AddTo##name(name *dArray, type element) { \
 
 AddToDArray(ComplexNumber, ComplexNumbersDArray)
 AddToDArray(Operation, OperationsDArray)
+
+int IsComma(char chr) {
+    return chr == ',';
+}
