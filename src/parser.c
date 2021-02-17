@@ -58,7 +58,7 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
 
     for (char *pc = line; *pc != '\0'; ++pc) {
         if (IsComma(*pc)) {
-            continue;
+            AddToOperationsDArray(&dOArray, EComma);
         } elif (IsDigit(*pc)) {
             AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
         } elif (IsAlpha(*pc)) {
