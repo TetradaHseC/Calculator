@@ -110,31 +110,29 @@ void OnSymbol(OperationsDArray *pDOArray, const char *pc) {
 
     AddToOperationsDArray(
             pDOArray,
-            operation == EMinus &&
-            (pDOArray->count == 0 || IsESymbol(GetLast(pDOArray))) ? EUnaryMinus : operation);
+            operation == EMinus && (pDOArray->count == 0 || IsESymbol(GetLast(pDOArray))) ? EUnaryMinus : operation);
 }
 
 bool IsESymbol(Operation operation) {
-    bool something = operation == EOpenParenthesis ||
-                     operation == EPlus ||
-                     operation == EMinus ||
-                     operation == EMultiply ||
-                     operation == EDivide;
-    return something;
+    return operation == EOpenParenthesis ||
+           operation == EPlus ||
+           operation == EMinus ||
+           operation == EMultiply ||
+           operation == EDivide;
 }
 
 Operation GetLast(const OperationsDArray *dOArray) { return dOArray->array[dOArray->count - 1]; }
 
 int IsDigit(char chr) {
-    return ((chr >= '0')&&(chr <= '9'));
+    return ((chr >= '0') && (chr <= '9'));
 }
 
 int IsAlpha(char chr) {
-    return (((chr >= 'a')&&(chr <= 'z'))||((chr >= 'A')&&(chr <= 'Z')));
+    return (((chr >= 'a') && (chr <= 'z')) || ((chr >= 'A') && (chr <= 'Z')));
 }
 
 int IsSymbol(char chr) {
-    return ((!IsAlpha(chr))&&(!IsDigit(chr))&&(chr != ' '));
+    return ((!IsAlpha(chr)) && (!IsDigit(chr)) && (chr != ' '));
 }
 
 int IsFunction(char *startStr) {
@@ -221,15 +219,9 @@ ComplexNumber GetNumber(char **startStr) {
 ComplexNumber GetDefined(char **startStr) {
     ComplexNumber result = { 0, 0, NULL };
     int size = 0;
-
     int i = 0;
-    for (;;i++) {
-        if (IsAlpha((*startStr)[i])) {
-            size++;
-        } else {
-            break;
-        }
-    }
+
+    for (;IsAlpha((*startStr)[i]); i++) size++;
 
     result.definedName = calloc(i + 1, sizeof(char));
     strncpy(result.definedName, *startStr, i);
