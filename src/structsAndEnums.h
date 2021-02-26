@@ -1,10 +1,12 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <complex.h>
+
 typedef enum { EComma, EPlus, EMinus, EUnaryMinus, EMultiply, EDivide, EOpenParenthesis, ECloseParenthesis, ETg, ELn, ECos, ESin, EPow, EAbs, EExp, EMag, ELog, EReal, EImag, ESqrt, EPhase } Operation;
 
 typedef struct {
-    double real, fake;
+    double complex number;
     char *definedName;
 } ComplexNumber;
 

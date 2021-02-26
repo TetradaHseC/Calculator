@@ -156,7 +156,7 @@ int IsFunction(char *startStr) {
 }
 
 ComplexNumber GetNumber(char **startStr) {
-    ComplexNumber result = { 0, 0, NULL };
+    ComplexNumber result = { 0, NULL };
     double number = 0;
     int afterDotCount = 0;
     bool isAfterDot = false;
@@ -179,9 +179,9 @@ ComplexNumber GetNumber(char **startStr) {
 
     number /= pow(10, afterDotCount);
     if (!isFake) {
-        result.real = number;
+        result.number = number;
     } else {
-        result.fake = number;
+        result.number = number * I;
     }
 
     *startStr += afterDotCount + 1 + (int)log10(number) - 1 + (isFake ? 1 : 0);
@@ -190,21 +190,25 @@ ComplexNumber GetNumber(char **startStr) {
 }
 
 ComplexNumber GetDefined(char **startStr) {
-    ComplexNumber result = { 0, 0, NULL };
+    ComplexNumber result = { 0, NULL };
     int size = 0;
 
     int i = 0;
     for (;;i++) {
-        if (IsAlpha((*startStr)[i])) {
+        if (IsAlpha((*startStr)[i]) || IsDigit((*startStr)[i])) {
             size++;
         } else {
             break;
         }
     }
 
-    result.definedName = calloc(i + 1, sizeof(char));
-    strncpy(result.definedName, *startStr, i);
-    *startStr += i - 1;
+    if (size == 1 && (*startStr)[0] == 'i') {
+        result.number = 1 * I;
+    } else {
+        result.definedName = calloc(i + 1, sizeof(char));
+        strncpy(result.definedName, *startStr, i);
+        *startStr += i - 1;
+    }
 
     return result;
 }
