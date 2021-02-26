@@ -10,7 +10,10 @@ void GetExpressionAndDefines(char *filename, char **expressionString, char ***de
 
     *expressionString = calloc(200, sizeof(char));
     fgets(*expressionString, 200, file);
-    *stolast(*expressionString) = '\0';
+    if (*stolast(*expressionString) == '\n')
+        *stolast(*expressionString) = '\0';
+    else
+        *(stolast(*expressionString) + 1) = '\0';
 
     *definitionLines = calloc(200, sizeof(char *));
     for (int i = 0; i < 200; ++i) {
