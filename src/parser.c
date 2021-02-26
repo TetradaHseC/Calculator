@@ -57,7 +57,8 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
     OperationsDArray dOArray = { NULL, 0, 0 };
 
     for (char *pc = line; *pc != '\0'; ++pc) {
-        if (IsComma(*pc)) {
+        if (*pc == ' ') {
+        } elif (IsComma(*pc)) {
             AddToOperationsDArray(&dOArray, EComma);
         } elif (IsDigit(*pc)) {
             AddToComplexNumbersDArray(&dNArray, GetNumber(&pc));
