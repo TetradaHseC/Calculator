@@ -163,7 +163,7 @@ ComplexNumber GetNumber(char **startStr) {
     bool isAfterDot = false;
     bool isFake = false;
 
-    for (char *pc = *startStr; *pc != '\0' && *pc != ' '; ++pc) {
+    for (char *pc = *startStr; IsDigit(*pc) || (!isAfterDot && *pc == 'i'); ++pc) {
         if (IsAlpha(*pc)) {
             isFake = *pc == 'i';
             break;
@@ -185,7 +185,8 @@ ComplexNumber GetNumber(char **startStr) {
         result.number = number * I;
     }
 
-    *startStr += afterDotCount + 1 + (int)log10(number) - 1 + (isFake ? 1 : 0);
+    *startStr += afterDotCount + (int)log10(number) + (isFake ? 1 : 0);
+    if (**startStr == ' ') (*startStr)++;
 
     return result;
 }
