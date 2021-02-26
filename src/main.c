@@ -1,7 +1,6 @@
+#include <stdlib.h>
 #include "parser.h"
 #include "input.h"
-
-void SomeFuncForEvaluating(ParsedExpression expression, int count, DictEntire **entires);
 
 int main() {
     char *expressionString;
@@ -22,7 +21,26 @@ int main() {
         dictEntires[i] = ParseDefinition(definitionsStrings[i]);
     }
 
-    //printf("%s", CNumberToString(SomeFuncForEvaluating(expression, entiresCount, dictEntires)));
+    //ComplexNumber answer = Evaluate(expression, definitionsCount, (DictEntire **) &dictEntires);
+
+    free(expression.opv);
+    for (int j = 0; j < expression.numc; ++j) {
+        if (expression.numv[j].definedName)
+            free(expression.numv[j].definedName);
+    }
+    free(expression.numv);
+
+    for (int i = 0; i < definitionsCount; ++i) {
+        free(dictEntires[i].key);
+
+        ParsedExpression defined = dictEntires[i].value;
+        free(defined.opv);
+        for (int j = 0; j < defined.numc; ++j) {
+            if (defined.numv[j].definedName)
+                free(defined.numv[j].definedName);
+        }
+        free(defined.numv);
+    }
 
     return 0;
 }
