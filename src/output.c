@@ -37,7 +37,7 @@ void BeautifyOutput(char *dest, ComplexNumber *answer) {
     if (fabs(imag) < 0.01) {
     } else {
         sprintf(dest + strlen(dest), " + ");
-        if (fabs(real - (int) real) < 0.01) {
+        if (fabs(imag - (int) imag) < 0.01) {
             sprintf(dest + strlen(dest), "%di", (int) imag);
         } else {
             sprintf(dest + strlen(dest), "%.2fi", imag);
