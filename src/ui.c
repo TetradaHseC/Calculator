@@ -193,8 +193,8 @@ void EnterFilepath(char **dest) {
 }
 
 void OnNewRecent(char *recentStorage, char *newRecent) {
-    char *fullPath = calloc(strlen(recentStorage) + strlen("../res/") + 1, sizeof(char));
-    strcat(fullPath, "../res/");
+    char *fullPath = calloc(strlen(recentStorage) + strlen("res/") + 1, sizeof(char));
+    strcat(fullPath, "res/");
     strcat(fullPath, recentStorage);
     FILE *storage = fopen(fullPath, "w");
     free(fullPath);
@@ -205,31 +205,43 @@ void OnNewRecent(char *recentStorage, char *newRecent) {
 
 void UploadRecent() {
     // region input
-    char fullPath[22] = "../res/input_recent";
+    char fullPath[22] = "res/input_recent";
     FILE *storage = fopen(fullPath, "r");
 
     inputFile = calloc(200, sizeof(char));
-    fgets(inputFile, 200, storage);
-    if (strlen(inputFile) > 0) {
-        if (inputFile[strlen(inputFile) - 1] == '\n')
-            inputFile[strlen(inputFile) - 1] = 0;
-    } else
+    if (storage == NULL) {
         sprintf(inputFile, "None");
-    fclose(storage);
+        storage = fopen(fullPath, "w");
+        fclose(storage);
+    } else {
+        fgets(inputFile, 200, storage);
+        if (strlen(inputFile) > 0) {
+            if (inputFile[strlen(inputFile) - 1] == '\n')
+                inputFile[strlen(inputFile) - 1] = 0;
+        } else
+            sprintf(inputFile, "None");
+        fclose(storage);
+    }
     // endregion
 
     // region output
-    sprintf(fullPath, "%s", "../res/output_recent");
+    sprintf(fullPath, "%s", "res/output_recent");
     storage = fopen(fullPath, "r");
 
     outputFile = calloc(200, sizeof(char));
-    fgets(outputFile, 200, storage);
-    if (strlen(outputFile) > 0) {
-        if (outputFile[strlen(outputFile)-1] == '\n')
-            outputFile[strlen(outputFile) - 1] = 0;
-    }else
+    if (storage == NULL) {
         sprintf(outputFile, "None");
-    fclose(storage);
+        storage = fopen(fullPath, "w");
+        fclose(storage);
+    } else {
+        fgets(outputFile, 200, storage);
+        if (strlen(outputFile) > 0) {
+            if (outputFile[strlen(outputFile) - 1] == '\n')
+                outputFile[strlen(outputFile) - 1] = 0;
+        } else
+            sprintf(outputFile, "None");
+        fclose(storage);
+    }
     // endregion
 }
 

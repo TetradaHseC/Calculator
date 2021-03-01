@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
-#include "parser.h"
-#include "input.h"
-#include "ui.h"
-#include "evaluator.h"
-#include "output.h"
+#include "src/parser.h"
+#include "src/input.h"
+#include "src/ui.h"
+#include "src/evaluator.h"
+#include "src/output.h"
 
 int main() {
     char *expressionString;
