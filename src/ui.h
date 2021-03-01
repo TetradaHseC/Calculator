@@ -4,6 +4,6 @@
 char *inputFile;
 char *outputFile;
 
-int DrawUI();
+int DoUIIteration(char *resultToDraw);
 
 #endif//UI_H

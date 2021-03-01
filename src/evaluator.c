@@ -1,5 +1,4 @@
-#include "evaluator.h"
-#include "evaluator.h"
+#include <string.h>
 #include <stdbool.h>
 #include "evaluator.h"
 #include "complex.h"
@@ -7,7 +6,9 @@
 #include "operations.h"
 #include "stdlib.h"
 #include "structsAndEnums.h"
-#include<string.h>
+
+#define PI_STRING "PI"
+#define E_STRING "e"
 
 int GetPrior(Operation operation){
     switch(operation) {
@@ -33,7 +34,11 @@ void EvaluateUnaryOperation(Operation operation, ComplexNumber* numbersarray, in
 
 DictEntire *GetEntire(DictEntire *entires, int entiresCount, char *name);
 
-DictEntire *MoveToEndEntire(DictEntire *entires, int count, char *name);
+ComplexNumber ExecDefined(ParsedExpression *expression, int count, DictEntire *entires, int id_numb);
+
+bool IsConst(char *name);
+
+ComplexNumber GetConst(char *name);
 
 ComplexNumber Evaluate(ParsedExpression expression, int count, DictEntire *entires) {
     int id_oper = 0; // operations count from args
@@ -44,11 +49,9 @@ ComplexNumber Evaluate(ParsedExpression expression, int count, DictEntire *entir
     Operation curroperation[expression.opc];
     ComplexNumber currnumbers[expression.numc];
 
-    currnumbers[numbCount++] = (expression.numv[id_numb].definedName != NULL) ?
-                               Evaluate(GetEntire(entires, count, expression.numv[id_numb].definedName)->value, count, entires) :
-                               expression.numv[id_numb];
+    currnumbers[numbCount++] = ExecDefined(&expression, count, entires, id_numb);
     id_numb++;
-    //curroperation[operCount++] = expression.opv[id_oper++];
+
     while (operCount >= 0 && id_oper <= expression.opc) {
         while ((operCount == 0 || curroperation[operCount - 1] == EOpenParenthesis ||
                 (GetPrior(curroperation[operCount - 1]) <= GetPrior(expression.opv[id_oper]))) &&
@@ -56,9 +59,7 @@ ComplexNumber Evaluate(ParsedExpression expression, int count, DictEntire *entir
             curroperation[operCount++] = expression.opv[id_oper++];
 
             if (!IsUnary(curroperation[operCount - 1])) {
-                currnumbers[numbCount++] = (expression.numv[id_numb].definedName != NULL) ?
-                                           Evaluate(GetEntire(entires, count, expression.numv[id_numb].definedName)->value, count, entires) :
-                                       expression.numv[id_numb];
+                currnumbers[numbCount++] = ExecDefined(&expression, count, entires, id_numb);
                 id_numb++;
             }
         }
@@ -88,14 +89,29 @@ ComplexNumber Evaluate(ParsedExpression expression, int count, DictEntire *entir
     return currnumbers[0];
 }
 
-DictEntire *MoveToEndEntire(DictEntire *entires, int count, char *name) {
-    DictEntire *ptemp = GetEntire(entires, count, name);
-    DictEntire temp = *ptemp;
+ComplexNumber ExecDefined(ParsedExpression *expression, int count, DictEntire *entires, int id_numb) {
+    if ((*expression).numv[id_numb].definedName == NULL)
+        return (*expression).numv[id_numb];
 
-    *ptemp = entires[count - 1];
-    entires[count - 1] = temp;
+    if (IsConst((*expression).numv[id_numb].definedName))
+        return GetConst((*expression).numv[id_numb].definedName);
 
-    return entires;
+    return Evaluate(GetEntire(entires, count, (*expression).numv[id_numb].definedName)->value, count, entires);
+}
+
+ComplexNumber GetConst(char *name) {// TODO: refactor
+    ComplexNumber result = { 0, 0 };
+
+    if (strcmp(name, PI_STRING) == 0)
+        result.number = M_PI;
+    if (strcmp(name, E_STRING) == 0)
+        result.number = M_E;
+
+    return result;
+}
+
+bool IsConst(char *name) {// TODO: refactor
+    return strcmp(name, PI_STRING) == 0 || strcmp(name, E_STRING) == 0;
 }
 
 DictEntire *GetEntire(DictEntire *entires, int entiresCount, char *name) {

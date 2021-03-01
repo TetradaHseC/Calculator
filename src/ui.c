@@ -73,7 +73,8 @@ void OnNotACommand() {
     printf("Такой команды нет, загляните в инфо сверху\n");
 }
 
-int DrawUI() {
+int DoUIIteration(char *resultToDraw) {
+    bool isDrawResultToDraw = true;
     bool isRunning = true;
     int needToClear = 0;
 
@@ -84,12 +85,12 @@ int DrawUI() {
             // region console clear
             system(
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
-                    "clear"
+                        "clear"
 #elif defined(Q_OS_MSDOS)
-                    "cls"
+                        "cls"
 #else
 #define NO_CLEAR
-                    ""
+                        ""
 #endif
             );
 #ifdef NO_CLEAR
@@ -100,6 +101,10 @@ int DrawUI() {
         needToClear = true;
 
         PrintInfo();
+        if (resultToDraw != NULL && isDrawResultToDraw) {
+            isDrawResultToDraw = false;
+            printf("%s\n  ", resultToDraw);
+        }
 
         switch (GetCommand()) {
             case InputCommand:

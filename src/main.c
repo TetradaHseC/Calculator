@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <printf.h>
 #include <stdbool.h>
 #include "parser.h"
 #include "input.h"
@@ -12,8 +11,17 @@ int main() {
     char **definitionsStrings;
     int definitionsCount;
 
+    ComplexNumber answer = { 0, 0 };
+    bool isCalculated = false;
+
     while (true) {
-        DrawUI();
+        if (isCalculated) {
+            char result[200] = "Ответ: ";
+            BeautifyOutput(result, &answer);
+            DoUIIteration(result);
+        } else {
+            DoUIIteration(NULL);
+        }
 
         GetExpressionAndDefines(inputFile, &expressionString, &definitionsStrings, &definitionsCount);
 
@@ -29,7 +37,8 @@ int main() {
             dictEntires[i] = ParseDefinition(definitionsStrings[i]);
         }
 
-        ComplexNumber answer = Evaluate(expression, definitionsCount, dictEntires);
+        answer = Evaluate(expression, definitionsCount, dictEntires);
+        isCalculated = true;
         //printf("%.2lf + %.2lfi\n", creal(answer.number), cimag(answer.number));
         Output(outputFile, answer);
 
