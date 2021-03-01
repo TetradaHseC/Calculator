@@ -10,17 +10,21 @@ void Output(char *filename, ComplexNumber answer) {
     double real = creal(answer.number),
            imag = cimag(answer.number);
 
-    if (fabs(real - (int)real) < 0.01)
-        sprintf(result + strlen(result), "%d", (int)real);
-    else
+    if (fabs(real - (int)real) < 0.01) {
+        sprintf(result + strlen(result), "%d", (int) real);
+    } else {
         sprintf(result + strlen(result), "%.2lf", real);
+    }
 
-    sprintf(result + strlen(result), " + ");
-
-    if (fabs(real - (int)real) < 0.01)
-        sprintf(result + strlen(result), "%di", (int)imag);
-    else
-        sprintf(result + strlen(result), "%.2fi", imag);
+    if (fabs(imag) < 0.01) {
+    } else {
+        sprintf(result + strlen(result), " + ");
+        if (fabs(real - (int) real) < 0.01) {
+            sprintf(result + strlen(result), "%di", (int) imag);
+        } else {
+            sprintf(result + strlen(result), "%.2fi", imag);
+        }
+    }
 
     FILE *file;
     char *temp = GetFullPath(filename);
