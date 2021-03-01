@@ -1,6 +1,9 @@
 #include <stdlib.h>
+#include <printf.h>
 #include "parser.h"
 #include "input.h"
+#include "ui.h"
+#include "evaluator.h"
 
 int main() {
     char *expressionString;
@@ -21,7 +24,10 @@ int main() {
         dictEntires[i] = ParseDefinition(definitionsStrings[i]);
     }
 
-    //ComplexNumber answer = Evaluate(expression, definitionsCount, (DictEntire **) &dictEntires);
+    //DrawUI();
+
+    ComplexNumber answer = Evaluate(expression, definitionsCount, dictEntires);
+    printf("%.2lf + %.2lfi", creal(answer.number), cimag(answer.number));
 
     free(expression.opv);
     for (int j = 0; j < expression.numc; ++j) {
