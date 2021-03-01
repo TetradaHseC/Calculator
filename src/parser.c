@@ -254,6 +254,7 @@ Operation GetSymbolOperation(char chr) {
         case '*': return EMultiply;
         case '(': return EOpenParenthesis;
         case ')': return ECloseParenthesis;
+        case '^': return EPow;
         default: throw_error("it is not operation");
     }
 }
