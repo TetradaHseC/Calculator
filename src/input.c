@@ -1,12 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <zconf.h>
 #include "input.h"
+#include "utils.h"
 
 char *stolast(char *string);
 
-void GetExpressionAndDefines(char *filename, char **expressionString, char ***definitionLines, int *definitionCount) {
-    FILE *file = fopen(filename, "r");
+void GetExpressionAndDefines(char *filename, char **expressionString, char ***definitionLines, int *definitionCount) { // TODO: refactor
+    FILE *file;
+    char *temp = GetFullPath(filename);
+
+    file = fopen(temp, "r");
+    if (file == NULL) { // we receive from user not a relative path
+        file = fopen(filename, "r");
+    } if (file == NULL) {
+        // somehow throw error
+    }
+
+    free(temp);
 
     *expressionString = calloc(200, sizeof(char));
     fgets(*expressionString, 200, file);
