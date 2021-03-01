@@ -133,7 +133,7 @@ void EvaluateOperation(Operation operation,ComplexNumber* numbersarray,int numb_
 void EvaluateBinaryOperation(Operation operation, ComplexNumber* numbersarray,int numb_id){
     switch(operation){
         case EMinus:
-            numbersarray[numb_id - 1].number = numbersarray[numb_id].number - numbersarray[numb_id - 1].number;
+            numbersarray[numb_id - 1].number = numbersarray[numb_id-1].number - numbersarray[numb_id].number;
             break;
         case EPlus:
             numbersarray[numb_id - 1].number = numbersarray[numb_id].number + numbersarray[numb_id - 1].number;
@@ -142,10 +142,10 @@ void EvaluateBinaryOperation(Operation operation, ComplexNumber* numbersarray,in
             numbersarray[numb_id - 1].number = numbersarray[numb_id].number * numbersarray[numb_id - 1].number;
             break;
         case EDivide:
-            numbersarray[numb_id - 1].number = numbersarray[numb_id].number / numbersarray[numb_id - 1].number;
+            numbersarray[numb_id - 1].number = numbersarray[numb_id - 1].number / numbersarray[numb_id].number;
             break;
         case EPow:
-            numbersarray[numb_id - 1].number = cpow(numbersarray[numb_id].number,numbersarray[numb_id - 1].number);
+            numbersarray[numb_id - 1].number = cpow(numbersarray[numb_id-1].number, numbersarray[numb_id].number);
             break;
     }
 }
@@ -170,12 +170,26 @@ void EvaluateUnaryOperation(Operation operation, ComplexNumber* numbersarray, in
         case ECos:
             numbersarray[numb_id].number = ccos(numbersarray[numb_id].number);
             break;
-
         case ESin:
             numbersarray[numb_id].number = csin(numbersarray[numb_id].number);
             break;
         case EAbs:
             numbersarray[numb_id].number = cabs(numbersarray[numb_id].number);
+            break;
+        case EExp:
+            numbersarray[numb_id].number = cexp(numbersarray[numb_id].number);
+            break;
+        case EReal:
+            numbersarray[numb_id].number = creal(numbersarray[numb_id].number);
+            break;
+        case EImag:
+            numbersarray[numb_id].number = cimag(numbersarray[numb_id].number);
+            break;
+        case EMag:
+            numbersarray[numb_id].number = cabs(numbersarray[numb_id].number);
+            break;
+        case EPhase:
+            numbersarray[numb_id].number = carg(numbersarray[numb_id].number);
             break;
     }
 }

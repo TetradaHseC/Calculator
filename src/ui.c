@@ -76,7 +76,7 @@ void OnNotACommand() {
 int DoUIIteration(char *resultToDraw) {
     bool isDrawResultToDraw = true;
     bool isRunning = true;
-    int needToClear = 0;
+    int needToClear = resultToDraw != NULL;
 
     UploadRecent();
 

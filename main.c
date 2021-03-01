@@ -31,11 +31,14 @@ int main() {
                         &expression.numv,
                         &expression.opc,
                         &expression.opv);
+        free(expressionString);
 
         DictEntire dictEntires[definitionsCount];
         for (int i = 0; i < definitionsCount; ++i) {
             dictEntires[i] = ParseDefinition(definitionsStrings[i]);
+            free(definitionsStrings[i]);
         }
+        free(definitionsStrings);
 
         answer = Evaluate(expression, definitionsCount, dictEntires);
         isCalculated = true;

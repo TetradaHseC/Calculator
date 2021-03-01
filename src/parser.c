@@ -164,7 +164,7 @@ ComplexNumber GetNumber(char **startStr) {
     bool isFake = false;
 
     char *pc;
-    for (pc = *startStr; IsDigit(*pc) || (!isAfterDot && *pc == 'i') || *pc == '.'; ++pc) {
+    for (pc = *startStr; IsDigit(*pc) || *pc == 'i' || *pc == '.'; ++pc) {
         if (IsAlpha(*pc)) {
             isFake = *pc == 'i';
             break;
@@ -188,6 +188,7 @@ ComplexNumber GetNumber(char **startStr) {
 
     *startStr = pc - 1;
     if (**startStr == ' ') (*startStr)++;
+    if (isFake) (*startStr)++;
 
     return result;
 }

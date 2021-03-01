@@ -19,7 +19,7 @@ void Output(char *filename, ComplexNumber answer) {
 
     char result[200];
     BeautifyOutput(result, &answer);
-    fputs(result, file);
+    fprintf(file, "%s", result);
 
     fclose(file);
 }
@@ -34,13 +34,13 @@ void BeautifyOutput(char *dest, ComplexNumber *answer) {
         sprintf(dest + strlen(dest), "%.2lf", real);
     }
 
-    if (fabs(imag) < 0.01) {
+    if (fabs(imag) < 0.005) {
     } else {
-        sprintf(dest + strlen(dest), " + ");
+        sprintf(dest + strlen(dest), (imag >= 0) ? " + " : " - ");
         if (fabs(imag - (int) imag) < 0.01) {
-            sprintf(dest + strlen(dest), "%di", (int) imag);
+            sprintf(dest + strlen(dest), "%di", abs((int) imag));
         } else {
-            sprintf(dest + strlen(dest), "%.2fi", imag);
+            sprintf(dest + strlen(dest), "%.2fi", fabs(imag));
         }
     }
 }
