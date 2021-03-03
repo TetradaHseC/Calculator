@@ -39,6 +39,10 @@ void GetExpressionAndDefines(char *filename, char **expressionString, char ***de
             *stolast((*definitionLines)[*definitionCount]) = '\0';
         (*definitionCount)++;
     }
+
+    for (int i = *definitionCount; i < 200; ++i) {
+        free((*definitionLines)[i]);
+    }
 }
 
 char *stolast(char *string) {
