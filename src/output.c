@@ -17,7 +17,7 @@ void Output(char *filename, ComplexNumber answer) {
     }
     free(temp);
 
-    char result[200];
+    char result[200] = {0};
     BeautifyOutput(result, &answer);
     fprintf(file, "%s", result);
 
