@@ -110,18 +110,17 @@ int IsSymbol(char chr) {
 }
 
 int IsFunction(char *startStr) {
+    bool result = 0;
     int len = 0;
     while (IsAlpha(*(startStr + len++)));
-    len--;
-    char *line = calloc(len, sizeof(char));
-    strncpy(line, startStr, len);
+    char line[len];
+    memset(line, 0, len);
+    strncpy(line, startStr, --len);
 
     if (len == 2) {
         if ((strcmp(line, "tg") == 0) ||
             (strcmp(line, "ln") == 0)) {
-            return 1;
-        } else {
-            return 0;
+            result = 1;
         }
     } elif (len == 3) { // TODO: ADD file for operations names
         if ((strcmp(line, "cos") == 0) ||
@@ -132,28 +131,22 @@ int IsFunction(char *startStr) {
             (strcmp(line, "mag") == 0) ||
             (strcmp(line, "log") == 0)
         ) {
-            return 1;
-        } else {
-            return 0;
+            result = 1;
         }
     } elif (len == 4) {
         if ((strcmp(line, "real") == 0) ||
             (strcmp(line, "imag") == 0) ||
             (strcmp(line, "sqrt") == 0)
         ) {
-            return 1;
-        } else {
-            return 0;
+            result = 1;
         }
     } elif (len == 5) {
         if (strcmp(line, "phase") == 0) {
-            return 1;
-        } else {
-            return 0;
+            result = 1;
         }
     }
 
-    return 0;
+    return result;
 }
 
 ComplexNumber GetNumber(char **startStr) {
@@ -244,7 +237,7 @@ Operation GetOperation(char **startStr) {
     scase(sqrt) return ESqrt;
     scase(phase) return EPhase;
 
-    throw_error("it is not operation");
+    throw_error("it is not operation(GetOperation)");
 }
 
 Operation GetSymbolOperation(char chr) {
@@ -256,7 +249,7 @@ Operation GetSymbolOperation(char chr) {
         case '(': return EOpenParenthesis;
         case ')': return ECloseParenthesis;
         case '^': return EPow;
-        default: throw_error("it is not operation");
+        default: throw_error("it is not operation(GetSymbolOperation)");
     }
 }
 
