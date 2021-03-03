@@ -32,6 +32,7 @@ void GetExpressionAndDefines(char *filename, char **expressionString, char ***de
         (*definitionLines)[i] = calloc(200, sizeof(char));
     }
 
+    *definitionCount = 0;
     while (!feof(file)) {
         fgets((*definitionLines)[*definitionCount], 200, file);
         if (*stolast((*definitionLines)[*definitionCount]) == '\n')
