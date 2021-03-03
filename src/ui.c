@@ -255,4 +255,3 @@ void PrintInfo() {
            inputFile == NULL ? "None" : inputFile,
            outputFile == NULL ? "None" : outputFile);
 }
-
