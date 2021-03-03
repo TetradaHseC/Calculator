@@ -6,6 +6,8 @@
 #include "src/evaluator.h"
 #include "src/output.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
 int main() {
     char *expressionString;
     char **definitionsStrings;
@@ -14,6 +16,7 @@ int main() {
     ComplexNumber answer = { 0, 0 };
     bool isCalculated = false;
 
+    // loop will stop in DoUIIteration
     while (true) {
         if (isCalculated) {
             char result[200] = "Ответ: ";
@@ -64,6 +67,5 @@ int main() {
             free(defined.numv);
         }
     }
-
-    return 0;
 }
+#pragma clang diagnostic pop

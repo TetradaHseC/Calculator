@@ -7,29 +7,6 @@
 
 #define scase(case_) if (strcmp(SWITCH_STRING_ARGUMENT, case_) == 0)
 
-// region console width
-int console_width =
-#if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
-        #include <sys/ioctl.h>
-    #include <stdio.h>
-    #include <unistd.h>
-
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-    w.ws_col;
-#elif defined(Q_OS_MSDOS)
-        #include <windows.h>
-
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-
-    csbi.srWindow.Right - csbi.srWindow.Left + 1;
-#else
-        80;
-#endif
-// endregion
-
 char *inputFile = NULL;
 char *outputFile = NULL;
 
@@ -42,8 +19,6 @@ void PrintInfo();
 void EnterFilepath(char **dest);
 
 void OnNewRecent(char *recentStorage, char *newRecent);
-
-void OnGetRecent(char *recentStorage);
 
 void UploadRecent();
 
@@ -59,14 +34,6 @@ void OnInputCommand() {
 void OnOutputCommand() {
     EnterFilepath(&outputFile);
     OnNewRecent("output_recent", outputFile);
-}
-
-void OnInputRecentCommand() {
-
-}
-
-void OnOutputRecentCommand() {
-
 }
 
 void OnNotACommand() {
@@ -247,12 +214,12 @@ void UploadRecent() {
     // endregion
 }
 
-char** _ReadFile(FILE* file, size_t *pcount) {
-    char **text = calloc(300, sizeof(char *));
-    char *row = calloc(300, sizeof(char));
+char** ReadFile(FILE* file, size_t *pcount) {
+    char **text = calloc(100, sizeof(char *));
+    char *row = calloc(200, sizeof(char));
 
     int i = 0; // счетчик строк
-    while(fgets(row, 300, file) != NULL)
+    while(fgets(row, 200, file) != NULL)
     {
         text[i] = row;
         i++;
@@ -272,11 +239,13 @@ void OnViewRecent() {
         printf("Файл не найден или не существует, пожалуйста перезапустите программу или введите имя другого файла.\n");
     } else {
         size_t count = 0;
-        char **rows = _ReadFile(storage, &count);
+        char **rows = ReadFile(storage, &count);
 
         for (int i = 0; i < count; ++i) {
             printf("%s\n", rows[i]);
+            free(rows[i]);
         }
+        free(rows);
     }
     fclose(storage);
 }

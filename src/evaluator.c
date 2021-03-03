@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "evaluator.h"
 #include "complex.h"
 #include "math.h"
@@ -99,7 +100,7 @@ ComplexNumber ExecDefined(ParsedExpression *expression, int count, DictEntire *e
     return Evaluate(GetEntire(entires, count, (*expression).numv[id_numb].definedName)->value, count, entires);
 }
 
-ComplexNumber GetConst(char *name) {// TODO: refactor
+ComplexNumber GetConst(char *name) {
     ComplexNumber result = { 0, 0 };
 
     if (strcmp(name, PI_STRING) == 0)
@@ -110,7 +111,7 @@ ComplexNumber GetConst(char *name) {// TODO: refactor
     return result;
 }
 
-bool IsConst(char *name) {// TODO: refactor
+bool IsConst(char *name) {
     return strcmp(name, PI_STRING) == 0 || strcmp(name, E_STRING) == 0;
 }
 
@@ -131,7 +132,7 @@ void EvaluateOperation(Operation operation,ComplexNumber* numbersarray,int numb_
 }
 
 void EvaluateBinaryOperation(Operation operation, ComplexNumber* numbersarray,int numb_id){
-    switch(operation){
+    switch(operation) {
         case EMinus:
             numbersarray[numb_id - 1].number = numbersarray[numb_id-1].number - numbersarray[numb_id].number;
             break;
@@ -147,6 +148,8 @@ void EvaluateBinaryOperation(Operation operation, ComplexNumber* numbersarray,in
         case EPow:
             numbersarray[numb_id - 1].number = cpow(numbersarray[numb_id-1].number, numbersarray[numb_id].number);
             break;
+        default:
+            fprintf(stderr, "Wrong Operation operation in EvaluateBinaryOperation");
     }
 }
 
@@ -191,5 +194,7 @@ void EvaluateUnaryOperation(Operation operation, ComplexNumber* numbersarray, in
         case EPhase:
             numbersarray[numb_id].number = carg(numbersarray[numb_id].number);
             break;
+        default:
+            fprintf(stderr, "Wrong Operation operation in EvaluateUnaryOperation");
     }
 }
