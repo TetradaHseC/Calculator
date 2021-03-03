@@ -208,6 +208,7 @@ void UploadRecent() {
     char fullPath[22] = "res/input_recent";
     FILE *storage = fopen(fullPath, "r");
 
+    if (inputFile != NULL) free(inputFile);
     inputFile = calloc(200, sizeof(char));
     if (storage == NULL) {
         sprintf(inputFile, "None");
@@ -228,6 +229,7 @@ void UploadRecent() {
     sprintf(fullPath, "%s", "res/output_recent");
     storage = fopen(fullPath, "r");
 
+    if (outputFile != NULL) free(outputFile);
     outputFile = calloc(200, sizeof(char));
     if (storage == NULL) {
         sprintf(outputFile, "None");
