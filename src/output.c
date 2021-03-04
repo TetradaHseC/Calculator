@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <printf.h>
+#include <stdio.h>
 #include "output.h"
 #include "utils.h"
 
