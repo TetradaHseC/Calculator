@@ -11,7 +11,7 @@ void Output(char *filename, ComplexNumber answer) {
 
     file = fopen(temp, "w");
     if (file == NULL) { // we receive from user not a relative path
-        file = fopen(filename, "r");
+        file = fopen(filename, "w");
     } if (file == NULL) {
         // somehow throw error
     }
