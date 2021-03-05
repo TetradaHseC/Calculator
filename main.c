@@ -5,6 +5,7 @@
 #include "src/ui.h"
 #include "src/evaluator.h"
 #include "src/output.h"
+#include "src/parenthases_parser.h"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
@@ -27,6 +28,7 @@ int main() {
         }
 
         GetExpressionAndDefines(inputFile, &expressionString, &definitionsStrings, &definitionsCount);
+        EjectParentheses(&expressionString, &definitionsStrings, &definitionsCount);
 
         ParsedExpression expression;
         ParseExpression(expressionString,

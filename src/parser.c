@@ -72,12 +72,12 @@ void ParseExpression(char *line, int *numc, ComplexNumber **numv, int *opc, Oper
             Operation operation = GetSymbolOperation(*pc);
 
             if (operation == EMinus &&
-                    (dOArray.count == 0 ||
+                    (((dOArray.count == 0) && (dNArray.count == 0)) || (dOArray.count != 0) && (
                     dOArray.array[dOArray.count - 1] == EOpenParenthesis ||
                     dOArray.array[dOArray.count - 1] == EPlus ||
                     dOArray.array[dOArray.count - 1] == EMinus ||
                     dOArray.array[dOArray.count - 1] == EMultiply ||
-                    dOArray.array[dOArray.count - 1] == EDivide)
+                    dOArray.array[dOArray.count - 1] == EDivide))
             ) {
                 AddToOperationsDArray(&dOArray, EUnaryMinus);
             } else {
@@ -102,7 +102,7 @@ int IsDigit(char chr) {
 }
 
 int IsAlpha(char chr) {
-    return (((chr >= 'a')&&(chr <= 'z'))||((chr >= 'A')&&(chr <= 'Z')));
+    return (((chr >= 'a')&&(chr <= 'z'))||((chr >= 'A')&&(chr <= 'Z'))) || (chr == '_');
 }
 
 int IsSymbol(char chr) {
