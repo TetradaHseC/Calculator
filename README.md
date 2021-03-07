@@ -16,6 +16,7 @@ Just download the given file package and use it according to the instructions be
     - Exponentiation `^`
     - Square root `sqrt()`
     - Functions like `sin()`, `cos()`, `tan()`, `log()`, `ln()`, `abs()`, `exp()`, `phase()`, `real()`, `imag()` and `mag()`.
+    - Constants `PI` and `e`.
     - Variables: `a=11`, `b=a*2` and etc.
 2. Run the program.
 3. Enter the path to the desired file.
