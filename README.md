@@ -27,7 +27,7 @@ Just download the given file package and use it according to the instructions be
 - [Artem Svyatov](https://github.com/xSVTx)
 - [Sergey Laryushkin](https://github.com/yoloroy)
 - [Stepan Anisimov](https://github.com/kipyatiln1k)
-- [Gabriel Gavrilov]
+- [Gabriel Gavrilov](https://github.com/gsgol)
 
 ## License & Copyright
 
